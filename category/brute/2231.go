@@ -19,6 +19,7 @@ func main() {
 
 		var sum int = i
 		for _, digit := range strNum {
+			fmt.Printf("%d ", digit)
 			n, _ := strconv.Atoi(string(digit))
 
 			sum += n
