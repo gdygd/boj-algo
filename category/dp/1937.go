@@ -40,26 +40,34 @@ var Dir [4][2]int = [4][2]int{
 	{-1, 0}, {1, 0}, {0, -1}, {0, 1},
 }
 
-func pandadfs(i, j, depth int) int {
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func pandadfs(i, j int) int {
 	if Dp[i][j] > 0 {
 		return Dp[i][j]
 	}
 
-	/*
-		Dp[i][j] = dfs(i, j)
-	*/
+	Dp[i][j] = 1
 
 	for _, d := range Dir {
 		ni, nj := i+d[0], j+d[1]
+
 		if ni < 0 || ni >= Sz || nj < 0 || nj >= Sz {
 			continue
 		}
-
+		/*
+			dp[i][j] = max(dp[i][j], dp[ni][nj]+1)
+		*/
 		if Maps[i][j] < Maps[ni][nj] {
-			Dp[i][j] = pandadfs(ni, nj, depth+1) + depth
+			Dp[i][j] = max(Dp[i][j], pandadfs(ni, nj)+1)
 		}
-	}
 
+	}
 	return Dp[i][j]
 }
 
@@ -68,6 +76,8 @@ func main() {
 	Maps = make([][]int, Sz)
 	Dp = make([][]int, Sz)
 
+	var ans int = 0
+
 	for i := 0; i < Sz; i++ {
 		Maps[i] = make([]int, Sz)
 		Dp[i] = make([]int, Sz)
@@ -75,16 +85,16 @@ func main() {
 		for j := 0; j < Sz; j++ {
 			fmt.Scanf("%d", &Maps[i][j])
 		}
-		fmt.Printf("%v \n", Maps[i])
 	}
 
 	for i := 0; i < Sz; i++ {
 		for j := 0; j < Sz; j++ {
-			pandadfs(i, j, 0)
+			v := pandadfs(i, j)
+			if v > ans {
+				ans = v
+			}
 		}
 	}
 
-	for _, d := range Dp {
-		fmt.Printf("%v \n", d)
-	}
+	fmt.Printf("%d\n", ans)
 }
